@@ -91,7 +91,7 @@ describe('zoo', () => {
       },
     }
 
-    const result = new RefactzooDataManipulation(data).reduce([() => true])
+    const result = new RefactzooDataManipulation(data).reduce([() : boolean => true])
 
     expect(result).toEqual(expected)
   })
@@ -125,9 +125,9 @@ describe('zoo', () => {
     const api_test = [
   {
     select: ['cp_vec'],
-      //@ts-expect-error
+      //@ts-expect-error coucou
 
-    merge: (key: value, value: any) => ({
+    merge: (key: value, value: unknown) : object => ({
       [key]: {
         cp: value,
         coup: key,
@@ -137,9 +137,9 @@ describe('zoo', () => {
 
   {
     select: ['cp_win_rate_vec'],
-      //@ts-expect-error
+      //@ts-expect-error coucou
 
-    merge: (key: value, value: any) => ({
+    merge: (key: value, value: unknown) : object => ({
       [key]: {
         win_rate: value,
       },

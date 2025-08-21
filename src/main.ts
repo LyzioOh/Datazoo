@@ -1,8 +1,10 @@
-//@ts-expect-error
 
 import { deepmergeInto } from 'deepmerge-ts'
 
-type Path = Objectkey[]
+
+type PredicateFn =(key: Objectkey) => boolean
+
+
 
 //dmitripavlutin.com/typescript-index-signatures/
 type FilteringParameter =
@@ -10,16 +12,17 @@ type FilteringParameter =
   | number
   | RegExp
   | string[]
-  | Function
+  | PredicateFn
   | undefined
 
 type Objectkey = string | number | boolean
-type keyValuePair = [Objectkey, any | undefined]
 
-type MergeConfig = {select : FilteringParameter[], merge: (key: Objectkey, value: any, path? : Objectkey[]) => object}
+type keyValuePair = [Objectkey, unknown | undefined]
+
+type MergeConfig = {select : FilteringParameter[], merge: (key: Objectkey, value: unknown, path? : Objectkey[]) => object}
 
 function* objectKeyPairGenerator(
-  object: Object,
+  object: object,
   filterParameter?: FilteringParameter
 ): Generator<keyValuePair, string, undefined> {
   let keys
@@ -32,14 +35,12 @@ function* objectKeyPairGenerator(
     typeof filterParameter == 'string' ||
     typeof filterParameter == 'number'
   ) {
-    if (object.hasOwnProperty(filterParameter)) {
-      //@ts-expect-error
-
+    if ( Object.hasOwn(object,filterParameter)) {
       const keyValuePair = [filterParameter, object[filterParameter]]
 
       console.log(keyValuePair)
 
-      //@ts-expect-error
+      //@ts-expect-error  test
 
       yield keyValuePair
     }
@@ -47,11 +48,10 @@ function* objectKeyPairGenerator(
     keys = Object.keys(object).filter((key) => filterParameter.test(key))
 
     for (const key of keys) {
-      if (object.hasOwnProperty(key)) {
-        //@ts-expect-error
+      if ( Object.hasOwn(object,key)) {
 
         const keyValuePair = [key, object[key]]
-        //@ts-expect-error
+        //@ts-expect-error  test
 
         yield keyValuePair
       }
@@ -60,11 +60,9 @@ function* objectKeyPairGenerator(
     keys = filterParameter
 
     for (const key of keys) {
-      if (object.hasOwnProperty(key)) {
-        //@ts-expect-error
-
+      if (Object.hasOwn(object,key)) {
         const keyValuePair = [key, object[key]]
-        //@ts-expect-error
+        //@ts-expect-error  test
 
         yield keyValuePair
       }
@@ -73,11 +71,9 @@ function* objectKeyPairGenerator(
     keys = Object.keys(object).filter((key) => filterParameter(key))
 
     for (const key of keys) {
-      if (object.hasOwnProperty(key)) {
-        //@ts-expect-error
-
+      if (Object.hasOwn(object,key)) {
         const keyValuePair = [key, object[key]]
-        //@ts-expect-error
+        //@ts-expect-error  test
 
         yield keyValuePair
       }
@@ -86,14 +82,14 @@ function* objectKeyPairGenerator(
   return 'Done'
 }
 
-const toNestedObject = (path: Objectkey[], value: any): Function =>
-  //@ts-expect-error
+const toNestedObject = (path: Objectkey[], value: unknown): object =>
+  //@ts-expect-error  test Coucou
   path.reduceRight((acc, key) => ({ [key]: acc }), value)
 
 export class RefactzooDataManipulation {
-  private data: Record<string, any>
+  private data: Record<string, object>
 
-  constructor(obj: Record<string, any>) {
+  constructor(obj: Record<string, object>) {
     this.data = obj
   }
 
@@ -101,11 +97,11 @@ export class RefactzooDataManipulation {
     filters?: FilteringParameter[],
     reducteur: (
       path: Objectkey[],
-      value: any,
+      value: unknown,
       lastKey: Objectkey
     ) => object = toNestedObject
   ): object {
-    let acc = {}
+    const acc = {}
 
     this.explore(
       (path, value, key) => deepmergeInto(acc, reducteur(path, value, key)),
@@ -148,7 +144,7 @@ export class RefactzooDataManipulation {
 
     */
 
-    let result = {}
+    const result = {}
 
 
     for(const builder of builders) {
@@ -168,9 +164,9 @@ export class RefactzooDataManipulation {
   }
 
   private _explore(
-    obj: Record<string, any>,
+    obj: object,
     path: Objectkey[],
-    callbackFn: (key: Objectkey[], value: any, path: Objectkey) => void,
+    callbackFn: (key: Objectkey[], value: unknown, path: Objectkey) => void,
     filters?: FilteringParameter[]
   ): void {
     const filter = filters && filters[path.length]
