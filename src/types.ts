@@ -1,4 +1,4 @@
-type PredicateFn =(key: Objectkey) => boolean
+type PredicateFn = (key: Objectkey) => boolean ;
 
 
 
