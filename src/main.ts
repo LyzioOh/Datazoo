@@ -105,14 +105,12 @@ export class RefactzooDataManipulation {
       let select = builder.select;
 
       select = select.map((value) => {
-        if ( typeof value == 'string' && value.startsWith('@@/Re/')) {
+        if (typeof value == 'string' && value.startsWith('@@/Re/')) {
           return new RegExp(value.slice(6));
         } else {
           return value;
         }
-      })
-
-
+      });
 
       const merge = builder.merge;
 
