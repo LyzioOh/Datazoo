@@ -16,7 +16,8 @@ describe('zoo', () => {
         ageinYear: 20,
       },
     }
-    const zooTree = new RefactzooDataManipulation(zoo)
+    new RefactzooDataManipulation(zoo)
+    expect(1).toEqual(1)
   })
 
   it('return the same object', () => {

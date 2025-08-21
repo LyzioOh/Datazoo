@@ -176,15 +176,12 @@ export class RefactzooDataManipulation {
     const filter = filters && filters[path.length]
     const generator = objectKeyPairGenerator(obj, filter)
 
-    for (let [key, value] of generator) {
+    for (const [key, value] of generator) {
       const currentPath = [...path, key]
 
       if (typeof value === 'object') {
         this._explore(value, currentPath, callbackFn, filters)
       } else {
-        console.log(value, key)
-        callbackFn(currentPath, value, key)
-
         callbackFn(currentPath, value, key)
       }
     }
