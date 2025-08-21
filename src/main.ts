@@ -1,74 +1,74 @@
-
-import { deepmergeInto } from 'deepmerge-ts'
-import { FilteringParameter, Objectkey, keyValuePair, MergeConfig } from './types.js'
-
-
+import { deepmergeInto } from 'deepmerge-ts';
+import {
+  FilteringParameter,
+  Objectkey,
+  keyValuePair,
+  MergeConfig,
+} from './types.ts';
 
 function* objectKeyPairGenerator(
   object: object,
-  filterParameter?: FilteringParameter
+  filterParameter?: FilteringParameter,
 ): Generator<keyValuePair, string, undefined> {
-  let keys
+  let keys;
 
   if (filterParameter == undefined) {
     for (const keyValuePair of Object.entries(object)) {
-      yield keyValuePair
+      yield keyValuePair;
     }
   } else if (
     typeof filterParameter == 'string' ||
     typeof filterParameter == 'number'
   ) {
-    if ( Object.hasOwn(object,filterParameter)) {
-      const keyValuePair = [filterParameter, object[filterParameter]]
+    if (Object.hasOwn(object, filterParameter)) {
+      const keyValuePair = [filterParameter, object[filterParameter]];
 
-      console.log(keyValuePair)
+      console.log(keyValuePair);
 
-
-      yield keyValuePair
+      yield keyValuePair;
     }
   } else if (filterParameter instanceof RegExp) {
-    keys = Object.keys(object).filter((key) => filterParameter.test(key))
+    keys = Object.keys(object).filter((key) => filterParameter.test(key));
 
     for (const key of keys) {
-      if ( Object.hasOwn(object,key)) {
+      if (Object.hasOwn(object, key)) {
+        const keyValuePair = [key, object[key]];
 
-        const keyValuePair = [key, object[key]]
-
-        yield keyValuePair
+        yield keyValuePair;
       }
     }
   } else if (filterParameter instanceof Array) {
-    keys = filterParameter
+    keys = filterParameter;
 
     for (const key of keys) {
-      if (Object.hasOwn(object,key)) {
-        const keyValuePair = [key, object[key]]
+      if (Object.hasOwn(object, key)) {
+        const keyValuePair = [key, object[key]];
 
-        yield keyValuePair
+        yield keyValuePair;
       }
     }
   } else if (filterParameter instanceof Function) {
-    keys = Object.keys(object).filter((key) => filterParameter(key))
+    keys = Object.keys(object).filter((key) => filterParameter(key));
 
     for (const key of keys) {
-      if (Object.hasOwn(object,key)) {
-        const keyValuePair = [key, object[key]]
+      if (Object.hasOwn(object, key)) {
+        const keyValuePair = [key, object[key]];
 
-        yield keyValuePair
+        yield keyValuePair;
       }
     }
   }
-  return 'Done'
+  return 'Done';
 }
 
 const toNestedObject = (path: Objectkey[], value: unknown): object =>
-  path.reduceRight((acc, key) => ({ [key]: acc }), value)
+  path.reduceRight((acc, key) => ({ [key]: acc }), value);
 
 export class RefactzooDataManipulation {
-  private data: Record<string, object>
+  private data: Record<string, object>;
 
   constructor(obj: Record<string, object>) {
-    this.data = obj
+    this.data = obj;
   }
 
   public reduce(
@@ -76,16 +76,16 @@ export class RefactzooDataManipulation {
     reducteur: (
       path: Objectkey[],
       value: unknown,
-      lastKey: Objectkey
-    ) => object = toNestedObject
+      lastKey: Objectkey,
+    ) => object = toNestedObject,
   ): object {
-    const acc = {}
+    const acc = {};
 
     this.explore(
       (path, value, key) => deepmergeInto(acc, reducteur(path, value, key)),
-      filters
-    )
-    return acc
+      filters,
+    );
+    return acc;
   }
 
   /**
@@ -94,69 +94,56 @@ export class RefactzooDataManipulation {
    */
   public explore(
     callbackFn: (path: Objectkey[], value: Objectkey, key: Objectkey) => void,
-    filters?: FilteringParameter[]
+    filters?: FilteringParameter[],
   ): void {
-    this._explore(this.data, [], callbackFn, filters)
+    this._explore(this.data, [], callbackFn, filters);
   }
 
-  public merge(
-    builders: MergeConfig[]
-  ): object {
+  public merge(builders: MergeConfig[]): object {
+    const result = {};
 
+    for (const builder of builders) {
+      let select = builder.select;
 
-      const result = {}
+      select = select.map((value) => {
+        if (value.startsWith('@@/Re/')) {
+          return new RegExp(value.slice(6));
+        } else {
+          return value;
+        }
+      });
 
+      console.log(select);
 
-    for(const builder of builders) {
-
-      let select = builder.select
-
-      select = select.map(value => {
-
-      if (value.startsWith('@@/Re/')) {
-        return new RegExp(value.slice(6))
-
-      }
-      else {
-        return value
-      }
-    })
-
-    console.log(select)
-
-
-
-      const merge = builder.merge
+      const merge = builder.merge;
 
       const current_result = this.reduce(select, (path, value, key) =>
-      merge(key, value, path))
+        merge(key, value, path),
+      );
 
-      deepmergeInto(result, current_result)
-}
+      deepmergeInto(result, current_result);
+    }
 
-    return result
-
-
+    return result;
   }
 
   private _explore(
     obj: object,
     path: Objectkey[],
     callbackFn: (key: Objectkey[], value: unknown, path: Objectkey) => void,
-    filters?: FilteringParameter[]
+    filters?: FilteringParameter[],
   ): void {
-    const filter = filters && filters[path.length]
-    const generator = objectKeyPairGenerator(obj, filter)
+    const filter = filters && filters[path.length];
+    const generator = objectKeyPairGenerator(obj, filter);
 
     for (const [key, value] of generator) {
-      const currentPath = [...path, key]
+      const currentPath = [...path, key];
 
       if (typeof value === 'object') {
-        this._explore(value, currentPath, callbackFn, filters)
+        this._explore(value, currentPath, callbackFn, filters);
       } else {
-        callbackFn(currentPath, value, key)
+        callbackFn(currentPath, value, key);
       }
     }
   }
 }
-

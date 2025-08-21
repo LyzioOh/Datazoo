@@ -1,18 +1,19 @@
-type PredicateFn = (key: Objectkey) => boolean ;
-
-
+export type PredicateFn = (key: Objectkey) => boolean;
 
 //dmitripavlutin.com/typescript-index-signatures/
-type FilteringParameter =
+export type FilteringParameter =
   | string
   | number
   | RegExp
   | string[]
   | PredicateFn
-  | undefined
+  | undefined;
 
-type Objectkey = string | number | boolean
+export type Objectkey = string | number | boolean;
 
-type keyValuePair = [Objectkey, unknown | undefined]
+//type keyValuePair = [Objectkey, unknown | undefined];
 
-type MergeConfig = {select : FilteringParameter[], merge: (key: Objectkey, value: unknown, path? : Objectkey[]) => object}
+export type MergeConfig = {
+  select: FilteringParameter[];
+  merge: (key: Objectkey, value: unknown, path?: Objectkey[]) => object;
+};
