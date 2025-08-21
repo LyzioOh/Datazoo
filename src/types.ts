@@ -11,7 +11,7 @@ export type FilteringParameter =
 
 export type Objectkey = string | number | boolean;
 
-//type keyValuePair = [Objectkey, unknown | undefined];
+export type keyValuePair = [Objectkey, unknown | undefined];
 
 export type MergeConfig = {
   select: FilteringParameter[];
