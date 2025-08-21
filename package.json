@@ -1,8 +1,10 @@
 {
-  "name": "node-typescript-boilerplate",
-  "version": "0.0.0",
-  "description": "Minimalistic boilerplate to quick-start Node.js development in TypeScript.",
+  "name": "ts-datazoo",
+  "version": "0.1.0",
+  "description": "An Easy Typescript data manipulation library",
   "type": "module",
+  "main": "./src/main.js",
+  "types": "./src/types.js",
   "engines": {
     "node": ">= 22.11 < 23"
   },

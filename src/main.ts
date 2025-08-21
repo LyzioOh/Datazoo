@@ -1,25 +1,8 @@
 
 import { deepmergeInto } from 'deepmerge-ts'
+import { FilteringParameter, Objectkey, keyValuePair, MergeConfig } from './types.js'
 
 
-type PredicateFn =(key: Objectkey) => boolean
-
-
-
-//dmitripavlutin.com/typescript-index-signatures/
-type FilteringParameter =
-  | string
-  | number
-  | RegExp
-  | string[]
-  | PredicateFn
-  | undefined
-
-type Objectkey = string | number | boolean
-
-type keyValuePair = [Objectkey, unknown | undefined]
-
-type MergeConfig = {select : FilteringParameter[], merge: (key: Objectkey, value: unknown, path? : Objectkey[]) => object}
 
 function* objectKeyPairGenerator(
   object: object,
@@ -40,7 +23,6 @@ function* objectKeyPairGenerator(
 
       console.log(keyValuePair)
 
-      //@ts-expect-error  test
 
       yield keyValuePair
     }
@@ -51,7 +33,6 @@ function* objectKeyPairGenerator(
       if ( Object.hasOwn(object,key)) {
 
         const keyValuePair = [key, object[key]]
-        //@ts-expect-error  test
 
         yield keyValuePair
       }
@@ -62,7 +43,6 @@ function* objectKeyPairGenerator(
     for (const key of keys) {
       if (Object.hasOwn(object,key)) {
         const keyValuePair = [key, object[key]]
-        //@ts-expect-error  test
 
         yield keyValuePair
       }
@@ -73,7 +53,6 @@ function* objectKeyPairGenerator(
     for (const key of keys) {
       if (Object.hasOwn(object,key)) {
         const keyValuePair = [key, object[key]]
-        //@ts-expect-error  test
 
         yield keyValuePair
       }
@@ -83,7 +62,6 @@ function* objectKeyPairGenerator(
 }
 
 const toNestedObject = (path: Objectkey[], value: unknown): object =>
-  //@ts-expect-error  test Coucou
   path.reduceRight((acc, key) => ({ [key]: acc }), value)
 
 export class RefactzooDataManipulation {
