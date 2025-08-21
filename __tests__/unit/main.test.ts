@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { RefactzooDataManipulation } from '../../src/main.js';
+import { DataZoo } from '../../src/main.js';
 
 /**
  * @jest-environment node
@@ -16,7 +16,7 @@ describe('zoo', () => {
         ageinYear: 20,
       },
     };
-    new RefactzooDataManipulation(zoo);
+    new DataZoo(zoo);
     expect(1).toEqual(1);
   });
 
@@ -31,7 +31,7 @@ describe('zoo', () => {
         name: 'Gerard',
       },
     };
-    const result = new RefactzooDataManipulation(data).reduce();
+    const result = new DataZoo(data).reduce();
 
     expect(result).toEqual(data);
   });
@@ -51,7 +51,7 @@ describe('zoo', () => {
       },
     };
 
-    const result = new RefactzooDataManipulation(data).reduce(['whale']);
+    const result = new DataZoo(data).reduce(['whale']);
 
     expect(result).toEqual(expected);
   });
@@ -71,7 +71,7 @@ describe('zoo', () => {
       },
     };
 
-    const result = new RefactzooDataManipulation(data).reduce([/whale/]);
+    const result = new DataZoo(data).reduce([/whale/]);
 
     expect(result).toEqual(expected);
   });
@@ -91,7 +91,7 @@ describe('zoo', () => {
       },
     };
 
-    const result = new RefactzooDataManipulation(data).reduce([
+    const result = new DataZoo(data).reduce([
       (): boolean => true,
     ]);
 
@@ -149,7 +149,7 @@ describe('zoo', () => {
       },
     ];
 
-    const result = new RefactzooDataManipulation(input).merge(api_test);
+    const result = new DataZoo(input).merge(api_test);
 
     expect(result).toEqual(expected);
   });
@@ -185,7 +185,7 @@ describe('zoo', () => {
       },
     };
 
-    const result = new RefactzooDataManipulation(input).merge([
+    const result = new DataZoo(input).merge([
       {
         select: ['@@/Re/maia_kdd', 'policy'],
         merge: (key: string, value: string, path): object => ({

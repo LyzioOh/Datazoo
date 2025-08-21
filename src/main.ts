@@ -63,7 +63,7 @@ const toNestedObject = (path: Objectkey[], value: unknown): object =>
   // @ts-ignore
   path.reduceRight((acc, key) => ({ [key]: acc }), value);
 
-export class RefactzooDataManipulation {
+export class DataZoo {
   private data: Record<string, object>;
 
   constructor(obj: Record<string, object>) {
