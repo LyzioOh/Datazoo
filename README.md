@@ -7,8 +7,6 @@ Provide a declarative and flexible syntax giving you the freedom you need
 🏗️ v.0.1.0 : work in progress
 
 Please Report any use case.
-
-[![Sponsor][sponsor-badge]][sponsor]
 [![TypeScript version][ts-badge]][typescript-5-7]
 [![Node.js version][nodejs-badge]][nodejs]
 [![APLv2][license-badge]][license]
