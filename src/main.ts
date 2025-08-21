@@ -4,13 +4,13 @@ import {
   FilteringParameter,
   Objectkey,
   MergeConfig,
-  // @ts-ignore
+  // @ts-expect-errorw
 } from './types.ts';
 
 function* objectKeyPairGenerator(
   object: object,
   filterParameter?: FilteringParameter,
-): Generator<any, string, undefined> {
+): Generator<unknown, string, undefined> {
   let keys;
 
   if (filterParameter == undefined) {
@@ -60,7 +60,7 @@ function* objectKeyPairGenerator(
   return 'Done';
 }
 const toNestedObject = (path: Objectkey[], value: unknown): object =>
-  // @ts-ignore
+  // @ts-expect-error
   path.reduceRight((acc, key) => ({ [key]: acc }), value);
 
 export class DataZoo {
