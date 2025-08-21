@@ -102,32 +102,30 @@ export class RefactzooDataManipulation {
   public merge(
     builders: MergeConfig[]
   ): object {
-    /**
-    console.log(filteringParameter)
-
-    const parsedFilteringParameter = filteringParameter.map(value => {
 
 
-      /**
+      const result = {}
+
+
+    for(const builder of builders) {
+
+      let select = builder.select
+
+      select = select.map(value => {
+
       if (value.startsWith('@@/Re/')) {
-        return new RegExp(value.slice(5))
+        return new RegExp(value.slice(6))
 
       }
       else {
         return value
       }
     })
-    console.log(parsedFilteringParameter)
-    const buildFunction = builder[1]
 
-    */
-
-    const result = {}
+    console.log(select)
 
 
-    for(const builder of builders) {
 
-      const select = builder.select
       const merge = builder.merge
 
       const current_result = this.reduce(select, (path, value, key) =>
@@ -161,3 +159,4 @@ export class RefactzooDataManipulation {
     }
   }
 }
+
