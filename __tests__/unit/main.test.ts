@@ -1,40 +1,154 @@
-import { describe, it, afterEach, beforeEach, vi, expect } from 'vitest';
-import { Delays, greeter } from '../../src/main.js';
+import { describe, it, expect } from 'vitest';
 
-describe('greeter function', () => {
-  const name = 'John';
+import { RefactzooDataManipulation } from '../../src/main.js'
 
-  beforeEach(() => {
-    // Read more about fake timers
-    // https://vitest.dev/api/vi.html#vi-usefaketimers
-    vi.useFakeTimers();
-  });
+/**
+ * @jest-environment node
+ */
 
-  afterEach(() => {
-    vi.useRealTimers();
-    vi.restoreAllMocks();
-  });
+// Example: Zoo with animals
 
-  // Assert if setTimeout was called properly
-  it('delays the greeting by 2 seconds', async () => {
-    vi.spyOn(global, 'setTimeout');
-    const p = greeter(name);
+describe('zoo', () => {
+  it('instanciate', () => {
+    const zoo = {
+      whale: {
+        name: 'MObye',
+        ageinYear: 20,
+      },
+    }
+    const zooTree = new RefactzooDataManipulation(zoo)
+  })
 
-    await vi.runAllTimersAsync();
-    await p;
+  it('return the same object', () => {
+    const data = {
+      whale: {
+        name: 'MObye',
+        ageinYear: 20,
+      },
+      girafe: {
+        ageinMonth: 600,
+        name: 'Gerard',
+      },
+    }
+    const result = new RefactzooDataManipulation(data).reduce()
 
-    expect(setTimeout).toHaveBeenCalledTimes(1);
-    expect(setTimeout).toHaveBeenLastCalledWith(
-      expect.any(Function),
-      Delays.Long,
-    );
-  });
+    expect(result).toEqual(data)
+  })
 
-  // Assert greeter result
-  it('greets a user with `Hello, {name}` message', async () => {
-    const p = greeter(name);
-    await vi.runAllTimersAsync();
+  it('sort on string', () => {
+    const data = {
+      whale: {
+        name: 'MObye',
+        ageinYear: 20,
+      },
+    }
 
-    expect(await p).toBe(`Hello, ${name}`);
-  });
-});
+    const expected = {
+      whale: {
+        name: 'MObye',
+        ageinYear: 20,
+      },
+    }
+
+    const result = new RefactzooDataManipulation(data).reduce(['whale'])
+
+    expect(result).toEqual(expected)
+  })
+
+  it('sort on regexp', () => {
+    const data = {
+      whale: {
+        name: 'MObye',
+        ageinYear: 20,
+      },
+    }
+
+    const expected = {
+      whale: {
+        name: 'MObye',
+        ageinYear: 20,
+      },
+    }
+
+    const result = new RefactzooDataManipulation(data).reduce([/whale/])
+
+    expect(result).toEqual(expected)
+  })
+
+  it('sort on function', () => {
+    const data = {
+      whale: {
+        name: 'MObye',
+        ageinYear: 20,
+      },
+    }
+
+    const expected = {
+      whale: {
+        name: 'MObye',
+        ageinYear: 20,
+      },
+    }
+
+    const result = new RefactzooDataManipulation(data).reduce([() => true])
+
+    expect(result).toEqual(expected)
+  })
+
+  it('may_rearrange_key', () => {
+    const input = {
+      cp_vec: {
+        a3: 12,
+        a7: 14,
+      },
+      cp_win_rate_vec: {
+        a3: 16,
+        a7: 18,
+      },
+    }
+
+    const expected = {
+      a3: {
+        coup: "a3",
+        cp: 12,
+        win_rate: 16,
+      },
+
+      a7: {
+        cp: 14,
+        coup: "a7",
+        win_rate: 18,
+      },
+    }
+
+    const api_test = [
+  {
+    select: ['cp_vec'],
+      //@ts-expect-error
+
+    merge: (key: value, value: any) => ({
+      [key]: {
+        cp: value,
+        coup: key,
+      },
+    }),
+  },
+
+  {
+    select: ['cp_win_rate_vec'],
+      //@ts-expect-error
+
+    merge: (key: value, value: any) => ({
+      [key]: {
+        win_rate: value,
+      },
+    }),
+  },
+]
+
+    const result = new RefactzooDataManipulation(input).merge(api_test)
+
+    expect(result).toEqual(expected)
+
+  })
+})
