@@ -2,7 +2,7 @@
   "name": "ts-datazoo",
   "version": "0.1.3",
   "description": "An Easy Typescript data manipulation library",
-  "type": "module",
+  "type": "commonjs",
   "main": "./src/main.js",
   "types": "./src/types.js",
   "engines": {

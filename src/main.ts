@@ -1,15 +1,16 @@
 import { deepmergeInto } from 'deepmerge-ts';
+
 import {
   FilteringParameter,
   Objectkey,
-  keyValuePair,
   MergeConfig,
+  // @ts-ignore
 } from './types.ts';
 
 function* objectKeyPairGenerator(
   object: object,
   filterParameter?: FilteringParameter,
-): Generator<keyValuePair, string, undefined> {
+): Generator<any, string, undefined> {
   let keys;
 
   if (filterParameter == undefined) {
@@ -22,8 +23,6 @@ function* objectKeyPairGenerator(
   ) {
     if (Object.hasOwn(object, filterParameter)) {
       const keyValuePair = [filterParameter, object[filterParameter]];
-
-      console.log(keyValuePair);
 
       yield keyValuePair;
     }
@@ -60,8 +59,8 @@ function* objectKeyPairGenerator(
   }
   return 'Done';
 }
-
 const toNestedObject = (path: Objectkey[], value: unknown): object =>
+  // @ts-ignore
   path.reduceRight((acc, key) => ({ [key]: acc }), value);
 
 export class RefactzooDataManipulation {
@@ -106,14 +105,14 @@ export class RefactzooDataManipulation {
       let select = builder.select;
 
       select = select.map((value) => {
-        if (value.startsWith('@@/Re/')) {
+        if ( typeof value == 'string' && value.startsWith('@@/Re/')) {
           return new RegExp(value.slice(6));
         } else {
           return value;
         }
-      });
+      })
 
-      console.log(select);
+
 
       const merge = builder.merge;
 
