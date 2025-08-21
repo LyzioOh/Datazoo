@@ -4,7 +4,7 @@ import {
   FilteringParameter,
   Objectkey,
   MergeConfig,
-  // @ts-expect-errorw
+  // @ts-expect-error with explanationw
 } from './types.ts';
 
 function* objectKeyPairGenerator(
@@ -60,7 +60,7 @@ function* objectKeyPairGenerator(
   return 'Done';
 }
 const toNestedObject = (path: Objectkey[], value: unknown): object =>
-  // @ts-expect-error
+  // @ts-expect-error with explanation
   path.reduceRight((acc, key) => ({ [key]: acc }), value);
 
 export class DataZoo {
